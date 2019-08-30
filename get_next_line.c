@@ -6,7 +6,7 @@
 /*   By: anorman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/03 16:35:31 by anorman           #+#    #+#             */
-/*   Updated: 2019/08/01 15:45:36 by anorman          ###   ########.fr       */
+/*   Updated: 2019/08/30 09:56:53 by anorman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,14 @@ static int	st_prenewline(t_list **start, t_bmark *place)
 	else
 		return (-1);
 }
+
+/*
+** Prenewline is for when there is already a newline in what was saved
+** from last time. It simply extracts and it from what was saved.
+**
+** This is probably where most efficiency is lost but this shouldnt happen
+** often for reasonable buffsizes
+*/
 
 static int	st_lstfill(const int fd, t_list **start, t_bmark *place)
 {
@@ -62,7 +70,10 @@ static int	st_lstfill(const int fd, t_list **start, t_bmark *place)
 }
 
 /*
-** returns fd for progress or -1 for finished; -2 for error
+** lstfill reads from the target and puts up to the newline into a linked list
+** to save on inefficient strjoining by only joining once when done.
+**
+** returns fd for progress or -1 for end of file; -2 for error
 ** puts the first line into a t_list and the unused read part
 ** into place->content
 */
@@ -117,6 +128,11 @@ int			st_cleanup(t_bmark **bm, t_bmark *pl, t_list **lst)
 	return (1);
 }
 
+/*
+** Deletes the created lst.
+** Deletes the node related to the fd if finished (-1) or errored (-2)
+*/
+
 int			get_next_line(const int fd, char **line)
 {
 	static t_bmark	*bookmark;
@@ -148,7 +164,7 @@ int			get_next_line(const int fd, char **line)
 
 /*
 ** bookmark is the list of in progress reads.
-** place->content is unused but read content
-** place->content_size is the fd associated or -1 for finished
+** place->red is unused but read content
+** place->fd is the fd associated or -1 for finished, -2 for error
 ** returns 1 for read; 0 for end file; -1 for error
 */
