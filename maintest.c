@@ -6,12 +6,13 @@
 /*   By: anorman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 16:44:46 by anorman           #+#    #+#             */
-/*   Updated: 2019/07/01 15:00:07 by anorman          ###   ########.fr       */
+/*   Updated: 2019/08/30 09:45:58 by anorman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "libft.h"
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -84,7 +85,7 @@ int	main(void)
 		}
 	
 	cnt = 0;
-	if (!ft_strcmp(str1, "yes"))
+	if (str1 && !strcmp(str1, "yes"))
 	{
 		fd[0] = open("war-and-peace.txt", O_RDONLY);
 		while ((res[0] = get_next_line(fd[0], &(str1))) && res[0] != -1)
